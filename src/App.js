@@ -1,6 +1,8 @@
-import React from 'react';
-import PropTypes from "prop-types";
-import { thisExpression } from '@babel/types';
+import React from "react";
+import axios from "axios";
+import Movie from "./Movie";
+import { Session } from "inspector";
+
 /*const Foodlike=[
   {
     id:1,
@@ -38,10 +40,8 @@ function App() {
   );
 }*/
 class App extends React.Component{
-  state={
-    count:0
-  };
-  add = () =>{
+
+  /*add = () =>{
     this.setState(current=>({count:current.count+1}));
   };
   minus=()=>{
@@ -55,15 +55,41 @@ class App extends React.Component{
   }
   componentWillUnmount() {
     console.log("Goodbye, cruel world");
+  }*/
+  state={
+    isLoading:true,
+    movies:[]
+  };
+  getMovie=async()=>{
+    const {data:{data: { movies }}
+  } = await axios.get(
+      "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
+    );
+    this.setState({ movies , isLoading: false });
+  };
+  componentDidMount(){
+    this.getMovie();
   }
+
   render() {
-    console.log("I'm rendering");
+    const {isLoading,movies}=this.state;
     return (
-    <div>
-      <h1>{this.state.count}</h1>
-      <button onClick={this.add}>add</button>
-      <button onClick={this.minus}>minus</button>
-    </div>
+    <section class="container">
+      {isLoading
+          ? <div class="loader">
+            <span class="loader_text">왜 안됨</span>
+            </div>
+          : movies.map(movie => (
+              <Movie
+                key={movie.id}
+                id={movie.id}
+                year={movie.year}
+                title={movie.title}
+                summary={movie.summary}
+                poster={movie.medium_cover_image}
+              />
+        ))}
+    </section>
     );
   }
 }
