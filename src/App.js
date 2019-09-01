@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
-const Foodlike=[
+import { thisExpression } from '@babel/types';
+/*const Foodlike=[
   {
     id:1,
     name:"kim",
@@ -35,6 +36,26 @@ function App() {
     </div>
     
   );
+}*/
+class App extends React.Component{
+  state={
+    count:0
+  };
+  add = () =>{
+    this.setState(current=>({count:current.count+1}));
+  };
+  minus=()=>{
+    this.setState(current=>({count:current.count-1}));
+  };
+  render(){
+    return (
+    <div>
+      <h1>{this.state.count}</h1>
+      <button onClick={this.add}>add</button>
+      <button onClick={this.minus}>minus</button>
+    </div>
+    );
+  }
 }
 
 export default App;
